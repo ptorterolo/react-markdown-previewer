@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {marked} from 'marked';
 import xss from 'xss';
 
@@ -50,22 +50,14 @@ And here. | Okay. | I think we get it.
 ![freeCodeCamp Logo](https://cdn.freecodecamp.org/testable-projects-fcc/images/fcc_secondary.svg)
 `;
   const [text, setText] = useState(defaultMarkdown);
-  const [html, setHtml] = useState<string | null>(null);
 
   const handleChange = (event:any) => {
     setText(event.target.value);
   };
   marked.use({ breaks: true, gfm: true});
   
-  //const html = marked.parse(text);
-  useEffect(() => {
-    const generateHtml = async () => {
-      const result = await marked.parse(text);
-      setHtml(result);
-    };
-  
-    generateHtml();
-  }, [text]);
+  const html = marked.parse(text).toString();
+ 
   return (
     <div>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
