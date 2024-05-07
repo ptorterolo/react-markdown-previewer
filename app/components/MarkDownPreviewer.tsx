@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {marked} from 'marked';
 import xss from 'xss';
 
@@ -50,19 +50,28 @@ And here. | Okay. | I think we get it.
 ![freeCodeCamp Logo](https://cdn.freecodecamp.org/testable-projects-fcc/images/fcc_secondary.svg)
 `;
   const [text, setText] = useState(defaultMarkdown);
+  const [html, setHtml] = useState<string | null>(null);
+
   const handleChange = (event:any) => {
     setText(event.target.value);
   };
   marked.use({ breaks: true, gfm: true});
   
-  const html = marked.parse(text);
-
+  //const html = marked.parse(text);
+  useEffect(() => {
+    const generateHtml = async () => {
+      const result = await marked.parse(text);
+      setHtml(result);
+    };
+  
+    generateHtml();
+  }, [text]);
   return (
     <div>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
 
       <textarea id="editor" className='textarea min-h-96 w-full' value={text} onChange={handleChange} />
-       <div className='bg-white rounded p-4 min-h-screen overflow-auto w-full markdown' id="preview" dangerouslySetInnerHTML={{ __html: html }} />
+       <div className='bg-white rounded p-4 min-h-screen overflow-auto w-full markdown' id="preview" dangerouslySetInnerHTML={{ __html: html || '' }} />
       </div>
         
     </div>
